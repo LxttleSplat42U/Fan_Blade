@@ -1,29 +1,31 @@
 #include <Arduino.h>
-#include <SPI.h>
-#include <Adafruit_DotStar.h>
+#include "LEDs.h"
+#include "Websocket.h"
+#include "WifiSetup.h"
 
-int OnBoardLED = 21;
-#define NUMPIXELS 36 // Number of LEDs in strip
-
-Adafruit_DotStar strip = Adafruit_DotStar(NUMPIXELS, DOTSTAR_BRG);
+int tCheckWebsocket = 0; // Timer to keep websocket alive
 
 void setup() {
+  Serial.begin(115200);
   // put your setup code here, to run once:
-  pinMode(OnBoardLED,OUTPUT);
+  pinMode(BUILTIN_LED,OUTPUT);
 
   // Initialize all pixels to 'off'
-  strip.begin();
-  strip.show(); 
+  initDisplayOff(); 
+
+  //Connect to WiFi and Websocket Server
+  connectToWifi();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  digitalWrite(OnBoardLED,HIGH);
-  delay(1000);
-  digitalWrite(OnBoardLED,LOW);
-  delay(1000);
-  strip.setPixelColor(1, 0xFF0000); // Blue
-  strip.show(); 
+  if (millis() - tCheckWebsocket > 1000) { // Check Websocket every second
+    tCheckWebsocket = millis();
+    checkWebSocketConnection(); 
+    Serial.println("Stayin Alive...");
+    sendWebSocketMessage("Stayin Alive..." + String(tCheckWebsocket));
+  }
 }
 
 // put function definitions here:
+

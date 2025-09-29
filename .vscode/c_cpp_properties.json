@@ -11,6 +11,7 @@
                 "E:/Projects/Fan_Blade/src",
                 "E:/Projects/Fan_Blade/.pio/libdeps/dfrobot_firebeetle2_esp32s3/Adafruit DotStar",
                 "E:/Projects/Fan_Blade/.pio/libdeps/dfrobot_firebeetle2_esp32s3/Adafruit BusIO",
+                "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
                 "E:/Projects/Fan_Blade/.pio/libdeps/dfrobot_firebeetle2_esp32s3/Arduino_JSON/src",
                 "E:/Projects/Fan_Blade/.pio/libdeps/dfrobot_firebeetle2_esp32s3/ESPAsyncWebServer/src",
@@ -244,7 +245,6 @@
                 "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/Update/src",
                 "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                 "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
-                "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 ""
             ],
             "browse": {
@@ -253,6 +253,7 @@
                     "E:/Projects/Fan_Blade/src",
                     "E:/Projects/Fan_Blade/.pio/libdeps/dfrobot_firebeetle2_esp32s3/Adafruit DotStar",
                     "E:/Projects/Fan_Blade/.pio/libdeps/dfrobot_firebeetle2_esp32s3/Adafruit BusIO",
+                    "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
                     "E:/Projects/Fan_Blade/.pio/libdeps/dfrobot_firebeetle2_esp32s3/Arduino_JSON/src",
                     "E:/Projects/Fan_Blade/.pio/libdeps/dfrobot_firebeetle2_esp32s3/ESPAsyncWebServer/src",
@@ -486,7 +487,6 @@
                     "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/Update/src",
                     "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                     "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
-                    "C:/Users/stefa/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     ""
                 ]
             },

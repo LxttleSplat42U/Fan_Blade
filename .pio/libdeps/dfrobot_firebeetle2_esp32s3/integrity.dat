@@ -1,4 +1,4 @@
-esp32async/ESPAsyncWebServer@^3.7.8
 esp32async/AsyncTCP@^3.4.4
-adafruit/Adafruit DotStar@^1.2.5
 arduino-libraries/Arduino_JSON
+esp32async/ESPAsyncWebServer@^3.7.8
+adafruit/Adafruit DotStar@^1.2.5
