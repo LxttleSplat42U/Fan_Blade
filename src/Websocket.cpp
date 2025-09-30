@@ -1,5 +1,4 @@
 #include "Websocket.h"
-#include <AsyncTCP.h>
 
 AsyncClient* tcpClient = nullptr;
 const char* websocket_server = "192.168.4.1";
@@ -33,6 +32,8 @@ void initWebSocketClient() {
   });
   
   tcpClient->onData([](void* arg, AsyncClient* client, void* data, size_t len) {
+    Serial.printf("Received %d bytes of data\n", len);
+    
     if (!handshakeCompleted) {
       String response = String((char*)data).substring(0, len);
       Serial.println("Handshake response: " + response);
@@ -69,6 +70,7 @@ void initWebSocketClient() {
 }
 
 void handleWebSocketData(uint8_t* data, size_t len) {
+  Serial.println("New Data");
   // Simple WebSocket frame parsing
   if (len < 2) return;
   
@@ -84,7 +86,19 @@ void handleWebSocketData(uint8_t* data, size_t len) {
       payloadLen = (data[2] << 8) | data[3];
       offset = 4;
     }
+    else if (payloadLen == 127) {
+      // Handle 64-bit length (simplified)
+      if (len < 10) return;
+      payloadLen = data[9]; // Use only lower byte for simplicity
+      offset = 10;
+    }
     
+    // Check if we have enough data for the complete payload
+    if (len < offset + payloadLen) {
+      Serial.println("Incomplete WebSocket frame received");
+      return;
+    }
+
     // Extract message
     String message = "";
     for (size_t i = 0; i < payloadLen && (offset + i) < len; i++) {
@@ -92,20 +106,35 @@ void handleWebSocketData(uint8_t* data, size_t len) {
     }
     
     Serial.println("WebSocket message: " + message);
-    
+
+    //Split message into parts
+    int firstColon = message.indexOf(':');
+    int secondColon = message.indexOf(':', firstColon + 1);
+
+     // Check if we have a valid format
+    if (firstColon == -1 || secondColon == -1) {
+      Serial.println("Invalid message format - expected TARGET:COMMAND:VALUE");
+      Serial.println("Received: " + message);
+      return;
+    } 
+
+    String targetClient = message.substring(0, firstColon);
+    String command = message.substring(firstColon + 1, secondColon);
+    String value = message.substring(secondColon + 1);
+
+    // Debug output
+    Serial.println("Target: " + targetClient);
+    Serial.println("Command: " + command);
+    Serial.println("Value: " + value);
+
     // Handle commands
-    if (message == "LED_ON" || message == "Turning ON") {
-      Serial.println("Executing LED_ON");
-      displayImage(1);
-      sendWebSocketMessage("LED turned ON");
-    } else if (message == "LED_OFF" || message == "Turning OFF") {    
-      Serial.println("Executing LED_OFF");
-      displayImage(0);
-      sendWebSocketMessage("LED turned OFF");
-      
-    } else if (message == "Connected") {
-      Serial.println("Server confirmed connection");
-    }
+    if (targetClient == ("FAN_"+ String(ESP_ID))) {
+      if (command == "DISPLAY"){
+        displayImage(value.toInt());
+        Serial.println("Setting display image to: " + String(value.toInt()));
+      }
+    } 
+
   }
 }
 
@@ -143,7 +172,7 @@ void checkWebSocketConnection() {
       Serial.println("WebSocket: CONNECTED");
     } else {
       Serial.println("WebSocket: DISCONNECTED - attempting reconnection...");
-      
+      displayImage(-1); // Turn off display on disconnect
       // Clean up existing connection
       if (tcpClient) {
         delete tcpClient;

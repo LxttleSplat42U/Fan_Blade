@@ -3,6 +3,9 @@
 #include "Websocket.h"
 #include "WifiSetup.h"
 
+//Set Number of LEDs in strip in LEDs.h
+//Define Unique ESP32 ID in Websocket.h
+
 int tCheckWebsocket = 0; // Timer to keep websocket alive
 
 void setup() {
@@ -23,8 +26,9 @@ void loop() {
     tCheckWebsocket = millis();
     checkWebSocketConnection(); 
     Serial.println("Stayin Alive...");
-    sendWebSocketMessage("Stayin Alive..." + String(tCheckWebsocket));
   }
+
+  updateLEDs(); // Update LED animations
 }
 
 // put function definitions here:

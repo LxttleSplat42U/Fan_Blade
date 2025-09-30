@@ -4,7 +4,7 @@
 #include <ESPAsyncWebServer.h>
 #include <AsyncTCP.h>
 
-#define ESP_ID 11 // Unique ID of this ESP32
+#define ESP_ID 12 // Unique ID of this ESP32
 
 void initWebSocketClient();
 void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len);
