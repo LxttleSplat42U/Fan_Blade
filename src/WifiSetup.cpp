@@ -5,9 +5,9 @@
 const char* ssid = "Holo3D"; //Main ESP32 Access Point SSID
 //const char* password = ""; //Password if required
 
-IPAddress local_IP(192, 168, 4, 11);
-IPAddress gateway(192, 168, 4, 1);
-IPAddress subnet(255, 255, 255, 0);
+IPAddress local_IP(192, 168, 4, ESP_ID); // Static IP address for this ESP32
+IPAddress gateway(192, 168, 4, 1); // Gateway IP address
+IPAddress subnet(255, 255, 255, 0); // Subnet mask
 
 void connectToWifi() {
   // Attempt to connect to WiFi network
