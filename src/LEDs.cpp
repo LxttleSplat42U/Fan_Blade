@@ -4,7 +4,7 @@
 #include <Adafruit_DotStar.h>
 
 #define NUMPIXELS 36 // Number of LEDs in strip
-Adafruit_DotStar strip = Adafruit_DotStar(NUMPIXELS, DOTSTAR_GBR); // GBR color order (confirm with tests)
+Adafruit_DotStar strip = Adafruit_DotStar(NUMPIXELS, DOTSTAR_GBR); // (confirm with tests as DotStars differ in color order)
 bool displayOff = true;
 bool animated = false;
 bool spiral = false;
@@ -59,5 +59,6 @@ void updateLEDs(){
 
 void initDisplayOff(){
   strip.begin();
+  strip.clear();
   strip.show(); 
 }

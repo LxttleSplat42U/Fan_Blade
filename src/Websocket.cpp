@@ -16,7 +16,7 @@ void initWebSocketClient() {
   
   tcpClient->onConnect([](void* arg, AsyncClient* client) {
     Serial.println("TCP connected to server");
-    
+
     // Send WebSocket handshake
     String handshake = "GET /ws HTTP/1.1\r\n";
     handshake += "Host: 192.168.4.1\r\n";
@@ -43,8 +43,9 @@ void initWebSocketClient() {
         handshakeCompleted = true;
         websocketConnected = true;
         
-        // Send initial message
-        sendWebSocketMessage("ESP32 " + String(ESP_ID) + " Connected");        
+        // Send initial to register as client with a unique ID
+        sendWebSocketMessage("REGISTER:" + String(ESP_ID));   
+        Serial.println("Sent registration message: " + String(ESP_ID));     
       }
     } else {
       // Handle WebSocket data
@@ -107,6 +108,13 @@ void handleWebSocketData(uint8_t* data, size_t len) {
     
     Serial.println("WebSocket message: " + message);
 
+    //Check if shutdown command
+    if (message == "-1") {
+      displayImage(-1); //Turn off display
+      Serial.println("Received shutdown command - turning off display");
+      return;
+    }
+
     //Split message into parts
     int firstColon = message.indexOf(':');
     int secondColon = message.indexOf(':', firstColon + 1);
@@ -128,7 +136,7 @@ void handleWebSocketData(uint8_t* data, size_t len) {
     Serial.println("Value: " + value);
 
     // Handle commands
-    if (targetClient == ("FAN_"+ String(ESP_ID))) {
+    if (targetClient == (String(ESP_ID))) {
       if (command == "DISPLAY"){
         displayImage(value.toInt());
         Serial.println("Setting display image to: " + String(value.toInt()));
@@ -184,9 +192,4 @@ void checkWebSocketConnection() {
       initWebSocketClient();
     }
   }
-}
-
-// Stub functions for compatibility
-void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
-  // Not used in this simplified implementation
 }
