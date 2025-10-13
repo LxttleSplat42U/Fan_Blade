@@ -1,10 +1,7 @@
-#include <Arduino.h>
-#include "LEDs.h"
-#include <SPI.h>
-#include <Adafruit_DotStar.h>
+#include <LEDs.h>
 
 #define NUMPIXELS 36 // Number of LEDs in strip
-Adafruit_DotStar strip = Adafruit_DotStar(NUMPIXELS, DOTSTAR_GBR); // (confirm with tests as DotStars differ in color order)
+Adafruit_DotStar strip = Adafruit_DotStar(NUMPIXELS, DOTSTAR_BGR); // (confirm with tests as DotStars differ in color order)
 bool displayOff = true;
 bool animated = false;
 bool spiral = false;
@@ -14,28 +11,34 @@ int tspiraltimer = 0; // Timer for spiral animation
 int currentPosition = 0;
 int currentPattern = 0;
 
-void displayImage(int ID){
+void displayImage(int ID, unsigned long colour, int pos){
+
+  // Reset display
+  strip.clear();
+  displayOff = false;
+  spiral = false;
+
   switch(ID){
-    case 0: {   //Display image Blue Circle
-      displayOff = false;
-      strip.clear();
+    case 0: {   //Display image Circle      
       strip.setPixelColor(0, 0x000F00);
-      strip.show(); 
-      spiral = false;
+      strip.show();       
       break;
     }
     case 1: {   //Display image Spiral
-      displayOff = false;
-      strip.clear();
       strip.setPixelColor(0, 0x00000F);
       strip.show(); 
       spiral = true;
       spiralLEDPos = 0;
       break;
     }
+    case 2:{
+      strip.setPixelColor(pos, colour);
+      strip.show(); 
+      break;
+    }
+
     default: { //Turn off display [-1]
       displayOff = true;
-      strip.clear();
       strip.show(); 
       break;
     }

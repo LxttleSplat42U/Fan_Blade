@@ -1,8 +1,8 @@
 #include "Websocket.h"
 
 AsyncClient* tcpClient = nullptr;
-const char* websocket_server = "192.168.4.1";
-const int websocket_port = 80;
+const char* websocket_server = "192.168.4.1"; //Change if different address
+const int websocket_port = 80;                //Change if different port
 bool websocketConnected = false;
 bool handshakeCompleted = false;
 
@@ -118,6 +118,7 @@ void handleWebSocketData(uint8_t* data, size_t len) {
     //Split message into parts
     int firstColon = message.indexOf(':');
     int secondColon = message.indexOf(':', firstColon + 1);
+    int thirdColon = message.indexOf(':', secondColon + 1);
 
      // Check if we have a valid format
     if (firstColon == -1 || secondColon == -1) {
@@ -128,7 +129,7 @@ void handleWebSocketData(uint8_t* data, size_t len) {
 
     String targetClient = message.substring(0, firstColon);
     String command = message.substring(firstColon + 1, secondColon);
-    String value = message.substring(secondColon + 1);
+    String value = message.substring(secondColon + 1, thirdColon);
 
     // Debug output
     Serial.println("Target: " + targetClient);
@@ -138,11 +139,27 @@ void handleWebSocketData(uint8_t* data, size_t len) {
     // Handle commands
     if (targetClient == (String(ESP_ID))) {
       if (command == "DISPLAY"){
-        displayImage(value.toInt());
-        Serial.println("Setting display image to: " + String(value.toInt()));
+
+        if (value == "2") { //Custom Circle
+        int fourthColon = message.indexOf(':', thirdColon + 1);
+        int fifthColon = message.indexOf(':', fourthColon + 1);
+        String colour = message.substring(thirdColon + 1, fourthColon);
+        String posLED = message.substring(fourthColon + 1, fifthColon);
+
+        // Convert hex string colour to (Ex, "0x0000FF") to long integer
+        unsigned long colourHEX = strtol(colour.c_str(), nullptr, 16);
+        //displayImage(2, colourValue, posLED.toInt());
+        // Serial.println("Setting display image to: " + String(value.toInt()) + " Colour: " + String(colourHEX, HEX) + " Position: " + posLED);
+        displayImage(2, colourHEX, posLED.toInt());
+        }
+        else{
+          displayImage(value.toInt());
+          // Serial.println("Setting display image to: " + String(value.toInt()));
+        }
+
+        
       }
     } 
-
   }
 }
 

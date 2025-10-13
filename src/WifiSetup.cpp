@@ -1,6 +1,7 @@
 #include <WifiSetup.h>
 #include <Websocket.h>
 
+
 // WiFi credentials and static IP configuration
 const char* ssid = "Holo3D"; //Main ESP32 Access Point SSID
 //const char* password = ""; //Password if required

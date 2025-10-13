@@ -1,3 +1,8 @@
+//Remember to change the ESP_ID in WifiSetup.h
+// %FORMAT with fan number and trailing 1
+// Ex, for fan "X", ID=X1
+// This ID is used to set the static IP address and websocket ID when connecting
+
 #include <Arduino.h>
 #include "LEDs.h"
 #include "Websocket.h"
