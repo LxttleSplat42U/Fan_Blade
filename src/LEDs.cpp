@@ -1,12 +1,12 @@
 #include <LEDs.h>
 
-#define NUMPIXELS 36 // Number of LEDs in strip
 Adafruit_DotStar strip = Adafruit_DotStar(NUMPIXELS, DOTSTAR_BGR); // (confirm with tests as DotStars differ in color order)
 bool displayOff = true;
 bool animated = false;
 bool spiral = false;
+bool displayE = false;
 int spiralLEDPos = 0;
-int spiralAnimationSpeed = 100; // Speed of animation in milliseconds
+int spiralAnimationSpeed = 200; // Speed of animation in milliseconds
 int tspiraltimer = 0; // Timer for spiral animation
 int currentPosition = 0;
 int currentPattern = 0;
@@ -17,6 +17,7 @@ void displayImage(int ID, unsigned long colour, int pos){
   strip.clear();
   displayOff = false;
   spiral = false;
+  displayE = false;
 
   switch(ID){
     case 0: {   //Display image Circle      
@@ -36,6 +37,12 @@ void displayImage(int ID, unsigned long colour, int pos){
       strip.show(); 
       break;
     }
+    case 3:{
+      strip.setPixelColor(0, 0x0F0000); //Red
+      strip.show();
+      displayE = true;
+      break;
+    }
 
     default: { //Turn off display [-1]
       displayOff = true;
@@ -45,7 +52,7 @@ void displayImage(int ID, unsigned long colour, int pos){
   }
 }
 
-void updateLEDs(){
+void updateLEDs(int colour){
   if (displayOff) return; //Do nothing if display is off
 
   if (spiral && (tspiraltimer - millis() > spiralAnimationSpeed)) {
@@ -57,6 +64,24 @@ void updateLEDs(){
     }
     strip.setPixelColor(spiralLEDPos, 0x00000F); //Turn next LED on
     strip.show();
+  } else if (displayE) {
+    // Load imageE into RAM as red
+    for (int col = 0; col < 36; col++)
+    {
+      for (int row = 0; row < NUMPIXELS; row++)
+      {
+        if (letterE[col][row] == 1)
+        {
+          strip.setPixelColor(row, 0x0F0000); // Red ON
+        }
+        else
+        {
+          strip.setPixelColor(row, 0x000000); // OFF
+        }
+      }
+      strip.show(); // Display strip
+      delayMicroseconds(1326); // wait for the next column in microseconds
+    }
   }
 }
 

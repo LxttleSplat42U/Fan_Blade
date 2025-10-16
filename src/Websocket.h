@@ -1,4 +1,6 @@
+#pragma once
 #include <Arduino.h>
+#include <HardwareSoftwareConfig.h>
 #include "LEDs.h"
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>

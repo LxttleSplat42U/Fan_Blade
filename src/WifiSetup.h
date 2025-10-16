@@ -1,3 +1,6 @@
+#pragma once
+#include <HardwareSoftwareConfig.h>
+#include <Websocket.h>
 #include <WiFi.h>
 #include <Arduino.h>
 
@@ -5,6 +8,5 @@
 // Ex, for fan "X", ID=X1
 //This ID is used to set the static IP address and websocket ID when
 //registering
-#define ESP_ID 21 
   
 void connectToWifi();

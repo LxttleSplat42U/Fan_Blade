@@ -70,6 +70,7 @@ void initWebSocketClient() {
   tcpClient->connect(websocket_server, websocket_port);
 }
 
+/*Function used to process websocket data*/
 void handleWebSocketData(uint8_t* data, size_t len) {
   Serial.println("New Data");
   // Simple WebSocket frame parsing
@@ -158,6 +159,8 @@ void handleWebSocketData(uint8_t* data, size_t len) {
         }
 
         
+      } else if (command == "RPM"){
+        //
       }
     } 
   }

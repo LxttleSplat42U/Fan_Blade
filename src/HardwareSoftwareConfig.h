@@ -1,0 +1,10 @@
+#pragma once
+#include <Arduino.h>
+#include <array>
+
+
+extern const int NUMPIXELS; // Number of LEDs in strip
+extern const int ESP_ID ; // Unique ID of this ESP32
+extern const char* ssid; //Main ESP32 Access Point SSID
+extern const char* password; //Password if required
+extern const int letterE[36][36];
