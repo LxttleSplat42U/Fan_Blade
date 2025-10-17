@@ -1,3 +1,7 @@
+/*Files used to create and setup the websocket connection and registration with the server.
+All other message handling, etc is also handled/processed here using the void handleWebSocketData() function.
+Images are updated and displayed using the "LED.h" and "LED.cpp" files.*/
+
 #include "Websocket.h"
 
 AsyncClient* tcpClient = nullptr;
@@ -5,6 +9,9 @@ const char* websocket_server = "192.168.4.1"; //Change if different address
 const int websocket_port = 80;                //Change if different port
 bool websocketConnected = false;
 bool handshakeCompleted = false;
+int RPM_delay = 0; // Variable to store delay based on RPM
+int RPM_delay_prev = 0; // Previous RPM delay to detect changes
+int avgRPM_delay = 0; // Variable to store averaged RPM delay
 
 void initWebSocketClient() {
   Serial.println("Initializing WebSocket client...");
@@ -138,7 +145,7 @@ void handleWebSocketData(uint8_t* data, size_t len) {
     Serial.println("Value: " + value);
 
     // Handle commands
-    if (targetClient == (String(ESP_ID))) {
+    if (targetClient == (String(ESP_ID))) { // Confirm if the intended recipient
       if (command == "DISPLAY"){
 
         if (value == "2") { //Custom Circle
@@ -149,18 +156,22 @@ void handleWebSocketData(uint8_t* data, size_t len) {
 
         // Convert hex string colour to (Ex, "0x0000FF") to long integer
         unsigned long colourHEX = strtol(colour.c_str(), nullptr, 16);
-        //displayImage(2, colourValue, posLED.toInt());
-        // Serial.println("Setting display image to: " + String(value.toInt()) + " Colour: " + String(colourHEX, HEX) + " Position: " + posLED);
         displayImage(2, colourHEX, posLED.toInt());
         }
         else{
           displayImage(value.toInt());
-          // Serial.println("Setting display image to: " + String(value.toInt()));
         }
-
         
       } else if (command == "RPM"){
-        //
+        Serial.println("Received RPM: " + value);
+        if (value.toFloat() > 0) {
+          RPM_delay = 60000000 / value.toFloat(); // Calculate delay based on RPM (in microseconds)
+        } else {
+          RPM_delay = 0;
+        }
+        avgRPM_delay = ((RPM_delay_prev + RPM_delay)) / 2; // average for better results
+        RPM_delay_prev = RPM_delay; // Update previous RPM delay
+        Serial.println("Calculated delay: " + String(RPM_delay));
       }
     } 
   }

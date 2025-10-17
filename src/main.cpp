@@ -35,8 +35,12 @@ void loop() {
     Serial.println("Stayin Alive...");
   }
 
-  updateLEDs(); // Update LED animations
+  if (displayMovingHI && (tHiscrollingtimer - millis() > 200)){ // add delay between updates
+    tHiscrollingtimer = millis(); // Reset timer
+    movingHIpos++;  // Advance scroll position
+    if (movingHIpos >= 36) movingHIpos = 0; // Wrap around
+    updateLEDs(0x00000F, movingHIpos); // Update LED animations
+  } else {
+    updateLEDs(); // Update LED animations
+  }
 }
-
-
-

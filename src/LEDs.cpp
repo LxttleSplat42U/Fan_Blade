@@ -1,13 +1,19 @@
 #include <LEDs.h>
+#include <Websocket.h>
 
 Adafruit_DotStar strip = Adafruit_DotStar(NUMPIXELS, DOTSTAR_BGR); // (confirm with tests as DotStars differ in color order)
 bool displayOff = true;
 bool animated = false;
 bool spiral = false;
 bool displayE = false;
+bool displayEwithRPM = false;
+bool displayMNS = false;
+bool displayMovingHI = false;
+int movingHIpos = 0;
 int spiralLEDPos = 0;
 int spiralAnimationSpeed = 200; // Speed of animation in milliseconds
 int tspiraltimer = 0; // Timer for spiral animation
+int tHiscrollingtimer = 0; // Timer for HI scrolling
 int currentPosition = 0;
 int currentPattern = 0;
 
@@ -18,6 +24,9 @@ void displayImage(int ID, unsigned long colour, int pos){
   displayOff = false;
   spiral = false;
   displayE = false;
+  displayEwithRPM = false;
+  displayMNS = false;
+  displayMovingHI = false;
 
   switch(ID){
     case 0: {   //Display image Circle      
@@ -34,13 +43,28 @@ void displayImage(int ID, unsigned long colour, int pos){
     }
     case 2:{
       strip.setPixelColor(pos, colour);
+      strip.setPixelColor(35-pos, colour); // Mirror on opposite side
       strip.show(); 
       break;
     }
     case 3:{
-      strip.setPixelColor(0, 0x0F0000); //Red
       strip.show();
       displayE = true;
+      break;
+    }
+    case 4:{
+      strip.show();
+      displayEwithRPM = true;
+      break;
+    }
+    case 5:{
+      strip.show();
+      displayMNS = true;
+      break;
+    } 
+    case 6:{
+      strip.show();
+      displayMovingHI = true;
       break;
     }
 
@@ -52,7 +76,7 @@ void displayImage(int ID, unsigned long colour, int pos){
   }
 }
 
-void updateLEDs(int colour){
+void updateLEDs(int colour, int movingPos){
   if (displayOff) return; //Do nothing if display is off
 
   if (spiral && (tspiraltimer - millis() > spiralAnimationSpeed)) {
@@ -82,7 +106,61 @@ void updateLEDs(int colour){
       strip.show(); // Display strip
       delayMicroseconds(1326); // wait for the next column in microseconds
     }
+  } else if (displayEwithRPM) {
+    // Load imageE into RAM as red
+    for (int col = 0; col < NUMPIXELS; col++)
+    {
+      for (int row = 0; row < NUMPIXELS; row++)
+      {
+        if (letterE[col][row] == 1)
+        {
+          strip.setPixelColor(row, 0x0F0000); // Red ON
+        }
+        else
+        {
+          strip.setPixelColor(row, 0x000000); // OFF
+        }
+      }
+      strip.show(); // Display strip
+      delayMicroseconds(avgRPM_delay*6); // wait for the next column in microseconds
+    }
+  }  else if (displayMovingHI){ 
+    // Scroll the display horizontally using movingPos
+    for (int col = 0; col < 36; col++) {
+        int scrollCol = (col + movingPos) % 36; // Wrap around the 36-column array
+
+        for (int row = 0; row < NUMPIXELS; row++) {
+            if (letterHI[scrollCol][row] == 1) {
+                strip.setPixelColor(row, 0x00000F); // Green ON
+            } else {
+                strip.setPixelColor(row, 0x000000); // OFF
+            }
+        }
+
+        strip.show();                       // Update LED strip
+        delayMicroseconds(1326);            // Wait for next column
+    }    
+
   }
+  else if (displayMNS) {
+    // Load imageMNS into RAM as red
+    for (int col = 0; col < 36; col++)
+    {
+      for (int row = 0; row < NUMPIXELS; row++)
+      {
+        if (letterMNS[col][row] == 1)
+        {
+          strip.setPixelColor(row, 0x000F00); // Green ON
+        }
+        else
+        {
+          strip.setPixelColor(row, 0x000000); // OFF
+        }
+      }
+      strip.show(); // Display strip
+      delayMicroseconds(1326); // wait for the next column in microseconds
+    }
+  } 
 }
 
 void initDisplayOff(){
