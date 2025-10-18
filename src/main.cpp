@@ -3,6 +3,7 @@
 #include "LEDs.h"
 #include "Websocket.h"
 #include "WifiSetup.h"
+#include "Custom.h"
 
 /*
 Remember to change the ESP_ID etc in HardwareSoftwareConfig.h
@@ -19,6 +20,8 @@ void setup() {
   Serial.begin(115200);
   
   pinMode(BUILTIN_LED,OUTPUT);
+
+  
 
   // Initialize all pixels to 'off'
   initDisplayOff(); 
@@ -40,7 +43,10 @@ void loop() {
     movingHIpos++;  // Advance scroll position
     if (movingHIpos >= 36) movingHIpos = 0; // Wrap around
     updateLEDs(0x00000F, movingHIpos); // Update LED animations
-  } else {
+  } else if (customTextDisplay) {
+    updateLEDs(0x00000F, 0, arrText); // Update LED animations with custom text
+  }  
+  else {
     updateLEDs(); // Update LED animations
   }
 }

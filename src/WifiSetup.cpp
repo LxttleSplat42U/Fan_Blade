@@ -1,7 +1,6 @@
 #include <WifiSetup.h>
 
 
-
 // WiFi credentials and static IP configuration
 
 //const char* password = ""; //Password if required

@@ -3,7 +3,7 @@
 // %FORMAT with fan number and trailing 1
 // Ex, for fan "X", ID=X1
 // This ID is used to set the static IP address and websocket ID when connecting
-const int ESP_ID = 11; // Unique ID of this ESP32
+const int ESP_ID = 21; // Unique ID of this ESP32
 const int NUMPIXELS = 36; // Number of LEDs in strip
 const char* ssid = "Holo3D"; //Main ESP32 Access Point SSID
 const char* password = ""; //Password if required
