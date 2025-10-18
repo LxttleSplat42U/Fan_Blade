@@ -128,9 +128,9 @@ void updateLEDs(int colour, int movingPos, String customText[])
   else if (displayEwithRPM)
   {
     // Load imageE into RAM as red
-    for (int col = 0; col < NUMPIXELS; col++)
+    for (int col = 0; col < 150; col++)
     {
-      for (int row = 0; row < NUMPIXELS; row++)
+      for (int row = 0; row < 150; row++)
       {
         if (letterE[col][row] == 1)
         {
@@ -142,7 +142,7 @@ void updateLEDs(int colour, int movingPos, String customText[])
         }
       }
       strip.show();                        // Display strip
-      delayMicroseconds(avgRPM_delay * 6); // wait for the next column in microseconds
+      delayMicroseconds(avgRPM_delay*delta_t[0]); // wait for the next column in microseconds
     }
   }
   else if (displayMovingHI)
