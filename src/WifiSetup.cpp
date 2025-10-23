@@ -1,8 +1,8 @@
 #include <WifiSetup.h>
-#include <Websocket.h>
+
 
 // WiFi credentials and static IP configuration
-const char* ssid = "Holo3D"; //Main ESP32 Access Point SSID
+
 //const char* password = ""; //Password if required
 
 IPAddress local_IP(192, 168, 4, ESP_ID); // Static IP address for this ESP32
@@ -12,14 +12,14 @@ IPAddress subnet(255, 255, 255, 0); // Subnet mask
 void connectToWifi() {
   // Attempt to connect to WiFi network
   Serial.print("Connecting to WiFi network: ");
-  Serial.println(ssid);
+  Serial.println(String(ssid) + " with password: " + String(password));
 
   // Configure static IP address
   if (!WiFi.config(local_IP, gateway, subnet)) {
     Serial.println("STA Failed to configure");
   }
 
-  WiFi.begin(ssid); //, password); // Uncomment password if needed
+  WiFi.begin(ssid, password);
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {

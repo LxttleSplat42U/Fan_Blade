@@ -1,17 +1,27 @@
 #include <Arduino.h>
+#include "HardwareSoftwareConfig.h"
 #include "LEDs.h"
 #include "Websocket.h"
 #include "WifiSetup.h"
+#include "Custom.h"
 
-//Set Number of LEDs in strip in LEDs.h
-//Define Unique ESP32 ID in Websocket.h
+/*
+Remember to change the ESP_ID etc in HardwareSoftwareConfig.h
+%FORMAT with fan number and trailing 1
+Ex, for fan "X", ID=X1
+This ID is used to set the static IP address and websocket ID when connecting
+*/
+
+
 
 int tCheckWebsocket = 0; // Timer to keep websocket alive
 
 void setup() {
   Serial.begin(115200);
-  // put your setup code here, to run once:
+  
   pinMode(BUILTIN_LED,OUTPUT);
+
+  
 
   // Initialize all pixels to 'off'
   initDisplayOff(); 
@@ -21,15 +31,22 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  
   if (millis() - tCheckWebsocket > 1000) { // Check Websocket every second
     tCheckWebsocket = millis();
     checkWebSocketConnection(); 
     Serial.println("Stayin Alive...");
   }
 
-  updateLEDs(); // Update LED animations
+  if (displayMovingHI && (tHiscrollingtimer - millis() > 200)){ // add delay between updates
+    tHiscrollingtimer = millis(); // Reset timer
+    movingHIpos++;  // Advance scroll position
+    if (movingHIpos >= 36) movingHIpos = 0; // Wrap around
+    updateLEDs(0x00000F, movingHIpos); // Update LED animations
+  } else if (customTextDisplay) {
+    updateLEDs(0x00000F, 0, arrText); // Update LED animations with custom text
+  }  
+  else {
+    updateLEDs(); // Update LED animations
+  }
 }
-
-// put function definitions here:
-

@@ -1,10 +1,17 @@
+/*Files used to create and setup the websocket connection and registration with the server.
+All other message handling, etc is also handled/processed here using the void handleWebSocketData() function.
+Images are updated and displayed using the "LED.h" and "LED.cpp" files.*/
+
+#pragma once
 #include <Arduino.h>
+#include <HardwareSoftwareConfig.h>
 #include "LEDs.h"
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncTCP.h>
+#include "WifiSetup.h"
 
-#define ESP_ID 21 // Unique ID of this ESP32 %FORMAT(FAN_NUMBER,1 Ex. if fan number 3 then ID=31)
+extern int avgRPM_delay;
 
 void initWebSocketClient();
 void sendWebSocketMessage(String message);
