@@ -128,9 +128,9 @@ void updateLEDs(int colour, int movingPos, String customText[])
   else if (displayEwithRPM)
   {
     // Load imageE into RAM as red
-    for (int col = 0; col < 150; col++)
+    for (int col = 0; col < NUMPIXELS; col++)
     {
-      for (int row = 0; row < 150; row++)
+      for (int row = 0; row < NUMPIXELS; row++)
       {
         if (letterE[col][row] == 1)
         {
